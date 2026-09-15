@@ -10,23 +10,27 @@ tools:
   - name: clarify
     description: >
       Gửi câu hỏi cho người dùng và chờ trả lời trước khi tiếp tục.
-      PHẢI gọi tool này với response_type="yes_no" trước bất kỳ hành động
-      ghi dữ liệu nào (ví dụ: create_ticket). Không được bỏ qua bước này
-      dù người dùng có vẻ đã đồng ý trong câu yêu cầu ban đầu.
-     "BẮT BUỘC DÙNG công cụ này khi: (1) Yêu cầu kiểm tra thiết bị nhưng thiếu mã tài sản hợp lệ (chưa có mã dạng LT-xxx, DT-xxx); (2) Yêu cầu tra cứu nhân viên nhưng thiếu mã nhân viên (chưa có mã dạng EMP-xxx); (3) Môi trường được yêu cầu không rõ ràng hoặc không nằm trong [production, staging]. TUYỆT ĐỐI KHÔNG tự ý suy đoán mã khi người dùng chưa cung cấp."
+      BẮT BUỘC gọi tool này trong các trường hợp:
+      (1) Trước bất kỳ hành động ghi dữ liệu nào (create_ticket) — dùng response_type="yes_no";
+      (2) Thiếu mã tài sản hợp lệ (dạng LT-xxx, DT-xxx) khi kiểm tra thiết bị;
+      (3) Thiếu mã nhân viên (dạng EMP-xxx) khi tra cứu nhân viên;
+      (4) Môi trường không rõ hoặc không thuộc [production, staging] — dùng response_type="choice".
+      TUYỆT ĐỐI KHÔNG tự suy đoán mã hoặc bỏ qua bước xác nhận.
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi gửi cho người dùng"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời mong muốn"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn (dùng khi response_type=choice)"}
-        question: {type: string, description: "Câu hỏi yêu cầu cung cấp thông tin còn thiếu"}
-        response_type: 
+        question:
+          type: string
+          default: ""
+          description: "Câu hỏi gửi cho người dùng"
+        response_type:
           type: string
           enum: [text, yes_no, choice]
-          description: "Dùng 'text' khi thiếu mã máy hoặc mã nhân viên; dùng 'choice' khi môi trường không rõ ràng để người dùng chọn."
-        options: 
+          default: "text"
+          description: "Dùng 'yes_no' trước write action; 'text' khi thiếu mã máy/nhân viên; 'choice' khi môi trường không rõ."
+        options:
           type: array
+          default: []
           items: {type: string}
           description: "Danh sách lựa chọn khi response_type='choice', ví dụ: ['production', 'staging']"
       required: [question]
@@ -116,6 +120,9 @@ tools:
       clarify(response_type="yes_no") và người dùng trả lời xác nhận đồng ý.
       KHÔNG được tự đặt confirmed=true dựa trên nội dung yêu cầu ban đầu.
       Nếu người dùng chưa xác nhận, hãy gọi clarify trước.
+      ĐẶC BIỆT: Nếu user thay đổi bất kỳ thông tin nào (summary, priority,
+      asset_id) sau khi đã xác nhận, xác nhận cũ bị hủy — phải gọi clarify
+      lại với response_type="yes_no" cho payload mới trước khi tạo ticket.
     parameters:
       type: object
       properties:
