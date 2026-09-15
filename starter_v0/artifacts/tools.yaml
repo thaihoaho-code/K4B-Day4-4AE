@@ -13,12 +13,22 @@ tools:
       PHẢI gọi tool này với response_type="yes_no" trước bất kỳ hành động
       ghi dữ liệu nào (ví dụ: create_ticket). Không được bỏ qua bước này
       dù người dùng có vẻ đã đồng ý trong câu yêu cầu ban đầu.
+     "BẮT BUỘC DÙNG công cụ này khi: (1) Yêu cầu kiểm tra thiết bị nhưng thiếu mã tài sản hợp lệ (chưa có mã dạng LT-xxx, DT-xxx); (2) Yêu cầu tra cứu nhân viên nhưng thiếu mã nhân viên (chưa có mã dạng EMP-xxx); (3) Môi trường được yêu cầu không rõ ràng hoặc không nằm trong [production, staging]. TUYỆT ĐỐI KHÔNG tự ý suy đoán mã khi người dùng chưa cung cấp."
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi gửi cho người dùng"}
         response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời mong muốn"}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn (dùng khi response_type=choice)"}
+        question: {type: string, description: "Câu hỏi yêu cầu cung cấp thông tin còn thiếu"}
+        response_type: 
+          type: string
+          enum: [text, yes_no, choice]
+          description: "Dùng 'text' khi thiếu mã máy hoặc mã nhân viên; dùng 'choice' khi môi trường không rõ ràng để người dùng chọn."
+        options: 
+          type: array
+          items: {type: string}
+          description: "Danh sách lựa chọn khi response_type='choice', ví dụ: ['production', 'staging']"
       required: [question]
 
   - name: search_kb
@@ -32,30 +42,31 @@ tools:
       required: [query]
 
   - name: check_service_status
-    description: "Kiểm tra trạng thái một dịch vụ."
+    description: "Kiểm tra trạng thái dịch vụ dùng chung. Chỉ hỗ trợ 2 môi trường: 'production' và 'staging'. Nếu người dùng yêu cầu môi trường không rõ (như 'demo', 'test'), KHÔNG ĐƯỢC tự đoán sang staging mà PHẢI gọi 'clarify' với options ['production', 'staging']."
     parameters:
       type: object
       properties:
-        service: {type: string, enum: [vpn, email, sso, wifi, printing], description: "Tên dịch vụ"}
-        environment: {type: string, enum: [production, staging], default: "production", description: "Môi trường"}
+        service: {type: string, enum: [vpn, email, sso, wifi, printing]}
+        environment: {type: string, enum: [production, staging], default: "production"}
       required: [service]
 
   - name: inspect_device
-    description: "Kiểm tra thông tin và chẩn đoán thiết bị."
+    description: "Kiểm tra chẩn đoán thiết bị cụ thể. BẮT BUỘC phải có mã tài sản hợp lệ (dạng LT-xxx, DT-xxx, MB-xxx, PR-xxx). Nếu người dùng chỉ nói chung chung 'laptop của mình' hoặc 'máy tính', KHÔNG ĐƯỢC gọi tool này mà PHẢI gọi 'clarify'."
     parameters:
       type: object
       properties:
-        asset_id: {type: string, description: "Mã tài sản"}
-        check: {type: string, enum: [all, network, vpn, security, hardware, software], default: "all", description: "Nhóm kiểm tra"}
+        asset_id: {type: string, description: "Mã tài sản hợp lệ (ví dụ: LT-204). CẤM điền các từ chung chung như 'laptop', 'pc'."}
+        check: {type: string, enum: [all, network, vpn, security, hardware, software], default: "all"}
       required: [asset_id]
 
   - name: lookup_user
-    description: "Tra cứu người dùng trong danh bạ hỗ trợ."
+    description: "Tra cứu thông tin nhân viên theo mã định danh EMP-xxx. Nếu người dùng chỉ nhắc đến tên phòng ban (như 'Sales', 'IT') hoặc không có mã nhân viên, KHÔNG ĐƯỢC gọi tool này mà PHẢI gọi 'clarify'."
     parameters:
       type: object
       properties:
-        employee_id: {type: string, description: "Mã nhân viên"}
+        employee_id: {type: string, description: "Mã nhân viên (ví dụ: EMP-1003). CẤM điền tên phòng ban như 'Sales'."}
       required: [employee_id]
+
 
   - name: format_incident_report
     description: "Trình bày các kết quả đã có thành báo cáo."
