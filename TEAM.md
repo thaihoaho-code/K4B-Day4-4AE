@@ -4,9 +4,9 @@
 
 ## Thông tin bài nộp
 
-- Tên nhóm:
-- Người đại diện / MSSV:
-- Tên repo: `K4-L3-DAY04-HoVaTen-MSSV-PromptEngineeringToolCalling`
+- Tên nhóm: 4AE
+- Người đại diện / MSSV: Hồ Thái Hòa / 2A202602915
+- Tên repo: `K4-L3-DAY04-HoThaiHoa-2A202602915-PromptEngineeringToolCalling`
 - URL repo, nhánh nộp, commit chốt:
 - Deadline áp dụng và link thông báo đổi hạn nếu có:
 
@@ -14,7 +14,10 @@
 
 | Họ và tên | MSSV | GitHub | Vai trò và công việc | File/commit/PR |
 |---|---|---|---|---|
-| | | | | |
+| Hồ Thái Hòa | 2A202602915 |   | | |
+| Nguyễn Văn Hồng | 2A202602800 | | | |
+| Nguyễn Đình Lâm Phúc | 2A202602986 | | | |
+| Lê Minh Sang | 2A202602864 | | | |
 
 ## Nhận xét chung
 
