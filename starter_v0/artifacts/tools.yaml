@@ -8,13 +8,17 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: >
+      Gửi câu hỏi cho người dùng và chờ trả lời trước khi tiếp tục.
+      PHẢI gọi tool này với response_type="yes_no" trước bất kỳ hành động
+      ghi dữ liệu nào (ví dụ: create_ticket). Không được bỏ qua bước này
+      dù người dùng có vẻ đã đồng ý trong câu yêu cầu ban đầu.
     parameters:
       type: object
       properties:
-        question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
-        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
+        question: {type: string, default: "", description: "Câu hỏi gửi cho người dùng"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời mong muốn"}
+        options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn (dùng khi response_type=choice)"}
       required: [question]
 
   - name: search_kb
@@ -96,12 +100,16 @@ tools:
       required: [query]
 
   - name: create_ticket
-    description: "Tạo một ticket hỗ trợ."
+    description: >
+      Tạo một ticket hỗ trợ. QUAN TRỌNG: Chỉ gọi tool này sau khi đã gọi
+      clarify(response_type="yes_no") và người dùng trả lời xác nhận đồng ý.
+      KHÔNG được tự đặt confirmed=true dựa trên nội dung yêu cầu ban đầu.
+      Nếu người dùng chưa xác nhận, hãy gọi clarify trước.
     parameters:
       type: object
       properties:
         summary: {type: string, default: "", description: "Tóm tắt sự cố"}
         priority: {type: string, enum: [low, medium, high, critical], default: "medium", description: "Mức ưu tiên"}
         asset_id: {type: string, default: "", description: "Mã tài sản nếu có"}
-        confirmed: {type: boolean, default: false, description: "Đã được người dùng xác nhận"}
+        confirmed: {type: boolean, default: false, description: "Chỉ đặt true sau khi người dùng đã xác nhận qua clarify"}
       required: [summary]
