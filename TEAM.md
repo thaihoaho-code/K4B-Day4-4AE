@@ -6,8 +6,8 @@
 
 - Tên nhóm: 4AE
 - Người đại diện / MSSV: Hồ Thái Hòa / 2A202602915
-- Tên repo: `K4-L3-DAY04-HoThaiHoa-2A202602915-PromptEngineeringToolCalling`
-- URL repo, nhánh nộp, commit chốt: `https://github.com/thaihoaho-code/K4B-Day4-4AE` | Nhánh: `main` | Commit chốt: 
+- Tên repo: `K4B-Day4-4AE`
+- URL repo, nhánh nộp, commit chốt: `https://github.com/thaihoaho-code/K4B-Day4-4AE` | Nhánh: `main` | Commit chốt: `docs: finalize report and team submission metadata`
 - Deadline áp dụng và link thông báo đổi hạn nếu có: `12:00 ngày 16/09/2026`
 
 ## Thành viên
@@ -96,4 +96,4 @@
   - Học được cốt lõi của quy trình Eval: Không thể chứng minh Prompt tốt lên nếu thiếu một baseline sạch và một bảng tracking metric (trước/sau) có tính đối chứng nghiêm ngặt.
 - **AI/công cụ đã dùng và cách kiểm tra:** 
   - Thao tác trực tiếp với `run_eval.py` để đo đạc. Sử dụng AI (Gemini/ChatGPT) để rà soát logic, tinh chỉnh văn phong và định dạng lại cấu trúc markdown của file `REPORT.md`.
-- **Thời điểm đã tự nộp URL repo chung trên VLearn:** [Ghi thời gian nộp của bạn vào đây]
+- **Thời điểm đã tự nộp URL repo chung trên VLearn:** 09:41:24 16/9/2026
