@@ -77,6 +77,16 @@ python run_eval.py --provider openrouter --version v0 --suite base --eval-cases 
 
 Thay `openrouter` bằng `openai`, `anthropic` hoặc `gemini` khi dùng provider khác. Không commit `.env`.
 
+### Chạy Giao diện Chat (UI)
+Nhóm đã hoàn thiện giao diện chat (UI) bằng Streamlit. Giao diện này sẽ hiển thị rõ công cụ đã gọi, tham số đầu vào, kết quả (hoặc lỗi), và phiên bản Artifact đang chạy (tích hợp trực tiếp xử lý hội thoại của nhóm).
+Để cài đặt thư viện và mở UI, chạy các lệnh sau:
+
+```powershell
+cd starter_v0
+pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
 ## Tài liệu cần đọc
 
 | File | Dùng khi |
